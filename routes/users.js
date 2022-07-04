@@ -1,41 +1,13 @@
 //* Oбъект связанный с app, на который мы и повесим обработчики
 const router = require('express').Router();
 
-//* Импорт модели данных
-const User = require('../models/user');
+const { getUsers, getUser, createUser } = require('../controllers/users');
 
 //* Принимаем запросы
 router
-  .get('/', (req, res) => {
-    User
-      .find({})
-      .then((users) => {
-        res
-          .status(200)
-          .send(users);
-      })
-      .catch((err) => console.error(err));
-  })
-  .get('/:id', (req, res) => {
-    User
-      .findById(req.params.id)
-      .then((user) => {
-        res
-          .status(200)
-          .send(user);
-      })
-      .catch((err) => console.error(err));
-  })
-  .post('/', (req, res) => {
-    User
-      .create(req.body)
-      .then((user) => {
-        res
-          .status(201)
-          .send(user);
-      })
-      .catch((err) => console.error(err));
-  });
+  .get('/', getUsers)
+  .get('/:id', getUser)
+  .post('/', createUser);
 
 //* Экспортировали роутер
 module.exports = router;
