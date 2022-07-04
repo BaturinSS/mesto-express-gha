@@ -4,7 +4,7 @@ const router = require('express').Router();
 //* Импорт модели данных
 const User = require('../models/user');
 
-//* Принимаем запрос GET
+//* Принимаем запросы
 router
   .get('/', (req, res) => {
     User
