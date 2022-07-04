@@ -4,13 +4,18 @@ const express = require('express');
 //* Подключаем модуль для работы с базой данных в MongoDB
 const mongoose = require('mongoose');
 
-//* Настроим порт, который должен слушать приложение
-//* Возьмём его из переменной окружения
-//* По умолчание установим порт 3000
-const { PORT = 3000 } = process.env;
+//* Подключаем модуль обработки запроса body
+const bodyParser = require('body-parser');
+
+//* Возьмём порт (по умолчанию 3000) и базовый URL из переменной окружения
+const { PORT = 3000, BASE_PATH } = process.env;
 
 //* Создаем приложение методом express
 const app = express();
+
+//* Промежуточный обработчик запроса
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 //* Подключаемся к серверу mongo
 mongoose.connect('mongodb://localhost:27017/mestodb', {
@@ -21,6 +26,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 
 //* Установим слушателя на порт
 app.listen(PORT, () => {
-  //* Если всё работает, консоль покажет, какой порт приложение слушает
   console.log(`App listening on port ${PORT}`);
+  console.log('Ссылка на сервер:');
+  console.log(BASE_PATH);
 });
