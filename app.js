@@ -13,18 +13,26 @@ const { PORT = 3000 } = process.env;
 //* Импортировать модуль users
 const usersRouter = require('./routes/users');
 
+//* Импортировать модуль cards
+const cardsRouter = require('./routes/cards');
+
 //* Создаем приложение методом express
 const app = express();
-
-//* Промежуточный обработчик запроса
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 
 //* Подключаемся к серверу mongo
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
-//* Перенаправляем запрос на нужный адрес
+//* Обрабатываем запрос
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use((req, res, next) => {
+  req.user = {
+    _id: '62c357fbe5ef2cd538db2d24',
+  };
+  next();
+});
 app.use('/users', usersRouter);
+app.use('/cards', cardsRouter);
 
 //* Установим слушателя на порт
 app.listen(PORT, () => {

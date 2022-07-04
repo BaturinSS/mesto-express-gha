@@ -1,6 +1,7 @@
 //* Импорт модели данных
 const User = require('../models/user');
 
+//* Экспорт функций в routes
 module.exports.getUsers = (req, res) => {
   User
     .find({})
@@ -11,7 +12,6 @@ module.exports.getUsers = (req, res) => {
     })
     .catch((err) => console.error(err));
 };
-
 module.exports.getUser = (req, res) => {
   User
     .findById(req.params.id)
@@ -22,7 +22,6 @@ module.exports.getUser = (req, res) => {
     })
     .catch((err) => console.error(err));
 };
-
 module.exports.createUser = (req, res) => {
   User
     .create(req.body)
@@ -33,3 +32,23 @@ module.exports.createUser = (req, res) => {
     })
     .catch((err) => console.error(err));
 };
+// module.exports.updateUser = (req, res) => {
+//   User
+//     .create(req.body)
+//     .then((user) => {
+//       res
+//         .status(201)
+//         .send(user);
+//     })
+//     .catch((err) => console.error(err));
+// };
+// module.exports.updateUserAvatar = (req, res) => {
+//   User
+//     .create(req.body)
+//     .then((user) => {
+//       res
+//         .status(201)
+//         .send(user);
+//     })
+//     .catch((err) => console.error(err));
+// };
