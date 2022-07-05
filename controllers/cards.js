@@ -1,21 +1,26 @@
 //* Импорт модели данных
 const Card = require('../models/card');
 
+//* Импорт констант
+const {
+  codOk, codCreated, codBadRequest, codForbidden,
+  codInternalServerError, createdMessageError,
+  textErrorNoCard,
+} = require('../utils/constants');
+
 //* Экспорт функций в routes
 module.exports.getCards = (req, res) => {
   Card
     .find({})
     .then((cards) => {
       res
-        .status(200)
+        .status(codOk)
         .send(cards);
     })
     .catch((err) => {
       res
-        .status(500)
-        .send({
-          message: `${err.name}: ${err.message}`,
-        });
+        .status(codInternalServerError)
+        .send(createdMessageError(err));
     });
 };
 module.exports.createCard = (req, res) => {
@@ -24,39 +29,39 @@ module.exports.createCard = (req, res) => {
     .create({ name, link, owner: req.user._id })
     .then((card) => {
       res
-        .status(201)
+        .status(codCreated)
         .send(card);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res
-          .status(400)
-          .send({ message: `${err.name}: ${err.message}` });
+          .status(codBadRequest)
+          .send(createdMessageError(err));
       } else {
         res
-          .status(500)
-          .send({ message: `${err.name}: ${err.message}` });
+          .status(codInternalServerError)
+          .send(createdMessageError(err));
       }
     });
 };
 module.exports.deleteCard = (req, res) => {
   Card
     .findByIdAndRemove(req.params.cardId)
-    .orFail(new Error('Такой карточки нет'))
+    .orFail(new Error(textErrorNoCard))
     .then((card) => {
       res
-        .status(200)
+        .status(codOk)
         .send({ message: 'Пост удалён', card });
     })
     .catch((err) => {
       if (err.name === 'Error') {
         res
-          .status(404)
-          .send({ message: `${err.name}: ${err.message}` });
+          .status(codForbidden)
+          .send(createdMessageError(err));
       } else {
         res
-          .status(400)
-          .send({ message: `${err.name}: ${err.message}` });
+          .status(codBadRequest)
+          .send(createdMessageError(err));
       }
     });
 };
@@ -67,21 +72,21 @@ module.exports.likeCard = (req, res) => {
       { $addToSet: { likes: req.user._id } },
       { new: true },
     )
-    .orFail(new Error('Такой карточки нет'))
+    .orFail(new Error(textErrorNoCard))
     .then((card) => {
       res
-        .status(200)
+        .status(codOk)
         .send(card);
     })
     .catch((err) => {
       if (err.name === 'Error') {
         res
-          .status(404)
-          .send({ message: `${err.name}: ${err.message}` });
+          .status(codForbidden)
+          .send(createdMessageError(err));
       } else {
         res
-          .status(400)
-          .send({ message: `${err.name}: ${err.message}` });
+          .status(codBadRequest)
+          .send(createdMessageError(err));
       }
     });
 };
@@ -92,21 +97,21 @@ module.exports.dislikeCard = (req, res) => {
       { $pull: { likes: req.user._id } },
       { new: true },
     )
-    .orFail(new Error('Такой карточки нет'))
+    .orFail(new Error(textErrorNoCard))
     .then((card) => {
       res
-        .status(200)
+        .status(codOk)
         .send(card);
     })
     .catch((err) => {
       if (err.name === 'Error') {
         res
-          .status(404)
-          .send({ message: `${err.name}: ${err.message}` });
+          .status(codForbidden)
+          .send(createdMessageError(err));
       } else {
         res
-          .status(400)
-          .send({ message: `${err.name}: ${err.message}` });
+          .status(codBadRequest)
+          .send(createdMessageError(err));
       }
     });
 };

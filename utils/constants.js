@@ -18,3 +18,6 @@ module.exports.createdMessageError = (err) => ({ message: `${err.name}: ${err.me
 
 //* Сохраним в константу техт ошибки 'Такого пользователя нет'
 module.exports.textErrorNoUser = 'Такого пользователя нет';
+
+//* Сохраним в константу техт ошибки 'Такой карточки нет'
+module.exports.textErrorNoCard = 'Такой карточки нет';
