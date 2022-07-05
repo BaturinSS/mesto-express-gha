@@ -48,7 +48,7 @@ module.exports.updateUser = (req, res) => {
     .orFail(new Error('Такого пользователя нет'))
     .then((user) => {
       res
-        .status(201)
+        .status(200)
         .send(user);
     })
     .catch((err) => {
@@ -76,7 +76,7 @@ module.exports.updateUserAvatar = (req, res) => {
     .orFail(new Error('Такого пользователя нет'))
     .then((user) => {
       res
-        .status(201)
+        .status(200)
         .send(user);
     })
     .catch((err) => {
