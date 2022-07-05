@@ -35,7 +35,7 @@ module.exports.getUser = (req, res) => {
         .send(user);
     })
     .catch((err) => {
-      if (err.name === 'Error') {
+      if (err.message === textErrorNoUser) {
         res
           .status(codForbidden)
           .send(createdMessageError(err));
@@ -65,7 +65,7 @@ module.exports.updateUser = (req, res) => {
         res
           .status(codBadRequest)
           .send(createdMessageError(err));
-      } if (err.name === 'Error') {
+      } if (err.message === textErrorNoUser) {
         res
           .status(codForbidden)
           .send(createdMessageError(err));
@@ -95,7 +95,7 @@ module.exports.updateUserAvatar = (req, res) => {
         res
           .status(codBadRequest)
           .send(createdMessageError(err));
-      } if (err.name === 'Error') {
+      } if (err.message === textErrorNoUser) {
         res
           .status(codForbidden)
           .send(createdMessageError(err));

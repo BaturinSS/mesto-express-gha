@@ -56,7 +56,7 @@ module.exports.deleteCard = (req, res) => {
         .send({ message: 'Пост удалён', card });
     })
     .catch((err) => {
-      if (err.name === 'Error') {
+      if (err.message === textErrorNoCard) {
         res
           .status(codForbidden)
           .send(createdMessageError(err));
@@ -83,7 +83,7 @@ module.exports.likeCard = (req, res) => {
         .send(card);
     })
     .catch((err) => {
-      if (err.name === 'Error') {
+      if (err.message === textErrorNoCard) {
         res
           .status(codForbidden)
           .send(createdMessageError(err));
@@ -110,7 +110,7 @@ module.exports.dislikeCard = (req, res) => {
         .send(card);
     })
     .catch((err) => {
-      if (err.name === 'Error') {
+      if (err.message === textErrorNoCard) {
         res
           .status(codForbidden)
           .send(createdMessageError(err));
