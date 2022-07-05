@@ -32,23 +32,23 @@ module.exports.createUser = (req, res) => {
     })
     .catch((err) => console.error(err));
 };
-// module.exports.updateUser = (req, res) => {
-//   User
-//     .create(req.body)
-//     .then((user) => {
-//       res
-//         .status(201)
-//         .send(user);
-//     })
-//     .catch((err) => console.error(err));
-// };
-// module.exports.updateUserAvatar = (req, res) => {
-//   User
-//     .create(req.body)
-//     .then((user) => {
-//       res
-//         .status(201)
-//         .send(user);
-//     })
-//     .catch((err) => console.error(err));
-// };
+module.exports.updateUser = (req, res) => {
+  User
+    .findByIdAndUpdate(req.body)
+    .then((user) => {
+      res
+        .status(201)
+        .send(user);
+    })
+    .catch((err) => console.error(err));
+};
+module.exports.updateUserAvatar = (req, res) => {
+  User
+    .create(req.body)
+    .then((user) => {
+      res
+        .status(201)
+        .send(user);
+    })
+    .catch((err) => console.error(err));
+};
