@@ -7,6 +7,8 @@ const mongoose = require('mongoose');
 //* Подключаем модуль обработки запроса body
 const bodyParser = require('body-parser');
 
+const path = require('path');
+
 //* Возьмём порт (по умолчанию 3000) из переменной окружения
 const { PORT = 3000 } = process.env;
 
@@ -33,12 +35,14 @@ app.use((req, res, next) => {
 });
 app.use('/users', usersRouter);
 app.use('/cards', cardsRouter);
-// app.use(express.static(path.join(__dirname, 'public')));
-app.use('/', (req, res) => {
-  res
-    .status(404)
-    .send({ message: 'Страница не существет' });
-});
+// app.use('/', (req, res) => {
+//   res
+//     .status(404)
+//     .send({ message: 'Страница не существет' });
+// });
+
+//* Передаем статичную страницу
+app.use(express.static(path.join(__dirname, 'public')));
 
 //* Установим слушателя на порт
 app.listen(PORT);
