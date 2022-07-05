@@ -47,8 +47,10 @@ module.exports.createCard = (req, res) => {
 module.exports.deleteCard = (req, res) => {
   Card
     .findByIdAndRemove(req.params.cardId)
-    .orFail(new Error(textErrorNoCard))
     .then((card) => {
+      if (!card) {
+        throw new Error(textErrorNoCard);
+      }
       res
         .status(codOk)
         .send({ message: 'Пост удалён', card });
@@ -72,8 +74,10 @@ module.exports.likeCard = (req, res) => {
       { $addToSet: { likes: req.user._id } },
       { new: true },
     )
-    .orFail(new Error(textErrorNoCard))
     .then((card) => {
+      if (!card) {
+        throw new Error(textErrorNoCard);
+      }
       res
         .status(codOk)
         .send(card);
@@ -97,8 +101,10 @@ module.exports.dislikeCard = (req, res) => {
       { $pull: { likes: req.user._id } },
       { new: true },
     )
-    .orFail(new Error(textErrorNoCard))
     .then((card) => {
+      if (!card) {
+        throw new Error(textErrorNoCard);
+      }
       res
         .status(codOk)
         .send(card);

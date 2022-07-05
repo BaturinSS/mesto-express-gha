@@ -26,8 +26,10 @@ module.exports.getUsers = (req, res) => {
 module.exports.getUser = (req, res) => {
   User
     .findById(req.params.id)
-    .orFail(new Error(textErrorNoUser))
     .then((user) => {
+      if (!user) {
+        throw new Error(textErrorNoUser);
+      }
       res
         .status(codOk)
         .send(user);
@@ -50,8 +52,10 @@ module.exports.updateUser = (req, res) => {
       new: true,
       runValidators: true,
     })
-    .orFail(new Error(textErrorNoUser))
     .then((user) => {
+      if (!user) {
+        throw new Error(textErrorNoUser);
+      }
       res
         .status(codOk)
         .send(user);
@@ -78,8 +82,10 @@ module.exports.updateUserAvatar = (req, res) => {
       new: true,
       runValidators: true,
     })
-    .orFail(new Error(textErrorNoUser))
     .then((user) => {
+      if (!user) {
+        throw new Error(textErrorNoUser);
+      }
       res
         .status(codOk)
         .send(user);
