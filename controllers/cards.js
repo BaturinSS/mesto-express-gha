@@ -67,12 +67,23 @@ module.exports.likeCard = (req, res) => {
       { $addToSet: { likes: req.user._id } },
       { new: true },
     )
+    .orFail(new Error('Такой карточки нет'))
     .then((card) => {
       res
         .status(200)
         .send(card);
     })
-    .catch((err) => console.error(err));
+    .catch((err) => {
+      if (err.name === 'Error') {
+        res
+          .status(404)
+          .send({ message: `${err.name}: ${err.message}` });
+      } else {
+        res
+          .status(400)
+          .send({ message: `${err.name}: ${err.message}` });
+      }
+    });
 };
 module.exports.dislikeCard = (req, res) => {
   Card
@@ -81,10 +92,21 @@ module.exports.dislikeCard = (req, res) => {
       { $pull: { likes: req.user._id } },
       { new: true },
     )
+    .orFail(new Error('Такой карточки нет'))
     .then((card) => {
       res
         .status(200)
         .send(card);
     })
-    .catch((err) => console.error(err));
+    .catch((err) => {
+      if (err.name === 'Error') {
+        res
+          .status(404)
+          .send({ message: `${err.name}: ${err.message}` });
+      } else {
+        res
+          .status(400)
+          .send({ message: `${err.name}: ${err.message}` });
+      }
+    });
 };
