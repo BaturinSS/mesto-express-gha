@@ -40,6 +40,4 @@ app.use('/', (req, res) => {
 });
 
 //* Установим слушателя на порт
-app.listen(PORT, () => {
-  console.log(`App listening on port ${PORT}`);
-});
+app.listen(PORT);
