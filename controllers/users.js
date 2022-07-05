@@ -34,7 +34,7 @@ module.exports.getUser = (req, res) => {
           .send({ message: `${err.name}: ${err.message}` });
       } else {
         res
-          .status(500)
+          .status(400)
           .send({ message: `${err.name}: ${err.message}` });
       }
     });
