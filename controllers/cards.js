@@ -4,9 +4,11 @@ const Card = require('../models/card');
 //* Импорт констант
 const {
   codOk, codCreated, codBadRequest, codForbidden,
-  codInternalServerError, createdMessageError,
-  textErrorNoCard,
+  codInternalServerError, textErrorNoCard,
 } = require('../utils/constants');
+
+//* Импорт прочих функций из utils.js
+const { createdMessageError } = require('../utils/utils');
 
 //* Экспорт функций в routes
 module.exports.getCards = (req, res) => {

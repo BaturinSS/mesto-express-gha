@@ -4,9 +4,11 @@ const User = require('../models/user');
 //* Импорт констант
 const {
   codOk, codCreated, codBadRequest, codForbidden,
-  codInternalServerError, createdMessageError,
-  textErrorNoUser,
+  codInternalServerError, textErrorNoUser,
 } = require('../utils/constants');
+
+//* Импорт прочих функций из utils.js
+const { createdMessageError } = require('../utils/utils');
 
 //* Экспорт функций в routes
 module.exports.getUsers = (req, res) => {
