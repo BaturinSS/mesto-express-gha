@@ -42,6 +42,7 @@ app.use('/', (req, res) => {
     .send({ message: 'Страница не существет' });
 });
 
+
 //* Передаем статичную страницу
 // app.use(express.static(path.join(__dirname, 'public')));
 
