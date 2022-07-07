@@ -67,6 +67,7 @@ module.exports.updateUser = (req, res) => {
         res
           .status(codBadRequest)
           .send(createdMessageErrorControllers(err));
+        return;
       } if (err.message === textErrorNoUser) {
         res
           .status(codForbidden)
@@ -97,6 +98,7 @@ module.exports.updateUserAvatar = (req, res) => {
         res
           .status(codBadRequest)
           .send(createdMessageErrorControllers(err));
+        return;
       } if (err.message === textErrorNoUser) {
         res
           .status(codForbidden)
