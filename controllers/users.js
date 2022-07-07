@@ -124,6 +124,11 @@ module.exports.createUser = (req, res) => {
         res
           .status(codBadRequest)
           .send(createdMessageErrorControllers(err));
+        return;
+      } if (err.name === 'MongoServerError') {
+        res
+          .status(codBadRequest)
+          .send(createdMessageErrorControllers(err));
       } else {
         res
           .status(codInternalServerError)

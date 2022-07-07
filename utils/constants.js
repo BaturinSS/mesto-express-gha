@@ -21,3 +21,6 @@ module.exports.textErrorNoCard = 'Такой карточки нет';
 
 //* Сохраним в константу техт ошибки 'Строка не прошла проверку'
 module.exports.textErrorNoValid = 'Строка не прошла проверку';
+
+//* Сохраним в константу техт ошибки 'Неправильно указан логин или пароль'
+module.exports.textErrorNoValidEmailPassword = 'Неправильные почта или пароль';
