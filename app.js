@@ -31,21 +31,17 @@ const { login, createUser } = require('./controllers/users');
 //* Обрабатываем запрос
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-// app.use((req, res, next) => {
-//   req.user = {
-//     _id: '62c357fbe5ef2cd538db2d24',
-//   };
-//   next();
-// });
-app.post('/signin', login);
-app.post('/signup', createUser);
+
+app.post('/sign-in', login);
+app.post('/sign-up', createUser);
+
 app.use('/users', usersRouter);
 app.use('/cards', cardsRouter);
-// app.use('/', (req, res) => {
-//   res
-//     .status(404)
-//     .send({ message: 'Страница не существет' });
-// });
+app.use('/', (req, res) => {
+  res
+    .status(404)
+    .send({ message: 'Страница не существет' });
+});
 
 //* Передаем статичную страницу
 // app.use(express.static(path.join(__dirname, 'public')));
