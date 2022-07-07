@@ -110,6 +110,7 @@ module.exports.updateUserAvatar = (req, res) => {
       }
     });
 };
+//* router.post('/', createUser)
 module.exports.createUser = (req, res) => {
   User
     .create(req.body)

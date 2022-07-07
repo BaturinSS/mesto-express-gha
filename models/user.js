@@ -11,19 +11,18 @@ const { textErrorNoValid } = require('../utils/constants');
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
     minlength: 2,
     maxlength: 30,
+    default: 'Жак-Ив Кусто',
   },
   about: {
     type: String,
-    required: true,
     minlength: 2,
     maxlength: 30,
+    default: 'Исследователь океана',
   },
   avatar: {
     type: String,
-    required: true,
     validate: {
       validator: (value) => validatorjs.isURL(value),
       message: (props) => `${textErrorNoValid} - '${props.value}'`,
@@ -34,6 +33,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
+    maxlength: 50,
     validate: {
       validator: (value) => validatorjs.isEmail(value),
       message: (props) => `${textErrorNoValid} - '${props.value}'`,
@@ -43,6 +43,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     minlength: 6,
+    maxlength: 50,
   },
 });
 
