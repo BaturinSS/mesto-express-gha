@@ -3,14 +3,14 @@ const router = require('express').Router();
 
 //* Импорт функций controllers
 const {
-  getUsers, getUser, createUser, updateUser, updateUserAvatar,
+  getUsers, getUser,
+  updateUser, updateUserAvatar,
 } = require('../controllers/users');
 
-//* Принимаем запросы
+//* Принимаем запросы /users
 router
   .get('/', getUsers)
   .get('/:id', getUser)
-  .post('/', createUser)
   .patch('/me', updateUser)
   .patch('/me/avatar', updateUserAvatar);
 

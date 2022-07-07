@@ -118,7 +118,7 @@ module.exports.updateUserAvatar = (req, res) => {
     });
 };
 //* Контроллер добавления в базу нового пользователя
-//* router.post('/', createUser)
+//* router.post('/signup', createUser);
 module.exports.createUser = (req, res) => {
   bcrypt.hash(req.body.password, 10)
     .then((hash) => {
@@ -154,6 +154,7 @@ module.exports.createUser = (req, res) => {
     });
 };
 //* Контроллер аутентификации(вход в приложение)
+//* router.post('/signin', login)
 module.exports.login = (req, res) => {
   User
     .findUserByCredentials(req.body)
