@@ -152,19 +152,9 @@ module.exports.createUser = (req, res) => {
 };
 //* Контроллер аутентификации(вход в приложение)
 module.exports.login = (req, res) => {
-  const { email, password } = req.body;
   User
-    .findOne({ email })
+    .findUserByCredentials(req.body)
     .then((user) => {
-      if (!user) {
-        throw new Error(textErrorNoValidEmailPassword);
-      }
-      return bcrypt.compare(password, user.password);
-    })
-    .then((matched) => {
-      if (!matched) {
-        throw new Error(textErrorNoValidEmailPassword);
-      }
       res
         .status(codOk)
         .send({ message: 'Всё верно!' });
