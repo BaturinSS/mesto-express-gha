@@ -1,3 +1,4 @@
+//* Импортируем модуль jsonwebtoken для создания токена
 const jwt = require('jsonwebtoken');
 
 //* Импортируем модуль bcrypt для хеширования пароля
