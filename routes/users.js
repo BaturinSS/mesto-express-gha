@@ -11,7 +11,7 @@ const {
 router
   .get('/', getUsers)
   .get('/:id', getUser)
-  .get('/me', updateUser)
+  // .get('/me', getUser)
   .patch('/me', updateUser)
   .patch('/me/avatar', updateUserAvatar);
 

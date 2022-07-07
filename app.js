@@ -7,6 +7,9 @@ const mongoose = require('mongoose');
 //* Подключаем модуль обработки запроса body
 const bodyParser = require('body-parser');
 
+//* Подключаем модуль обработки запроса cookie
+const cookieParser = require('cookie-parser');
+
 //* Подключаем модуль, предоставляет утилиты для работы с путями к файлам и каталогам
 // const path = require('path');
 
@@ -34,6 +37,7 @@ const auth = require('./middlewares/auth');
 //* Обрабатываем запрос
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 app.post('/sign-in', login);
 app.post('/sign-up', createUser);
