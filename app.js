@@ -28,6 +28,9 @@ mongoose.connect('mongodb://localhost:27017/mestodb');
 //* Импорт controllers
 const { login, createUser } = require('./controllers/users');
 
+//* Импорт мидлвэр авторизации для зашиты роутов
+const auth = require('./middlewares/auth');
+
 //* Обрабатываем запрос
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -35,6 +38,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.post('/sign-in', login);
 app.post('/sign-up', createUser);
 
+app.use(auth);
 app.use('/users', usersRouter);
 app.use('/cards', cardsRouter);
 app.use('/', (req, res) => {

@@ -27,3 +27,6 @@ module.exports.textErrorNoValid = 'Строка не прошла проверк
 
 //* Сохраним в константу техт ошибки 'Неправильно указан логин или пароль'
 module.exports.textErrorNoValidEmailPassword = 'Неправильные почта или пароль';
+
+//* Сохраним в константу техт ошибки 'Необходима авторизация'
+module.exports.textErrorAuthRequired = 'Необходима авторизация';
