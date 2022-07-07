@@ -10,8 +10,8 @@ const {
 router
   .get('/', getCards)
   .post('/', createCard)
-  .delete('/:cardId', deleteCard)
   .put('/:cardId/likes', likeCard)
+  .delete('/:cardId', deleteCard)
   .delete('/:cardId/likes', dislikeCard);
 
 //* Экспортировали роутер

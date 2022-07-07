@@ -180,3 +180,30 @@ module.exports.login = (req, res) => {
       }
     });
 };
+module.exports.getUserInfo = (req, res) => {
+  User.findById(req.user._id)
+    .then((user) => {
+      if (!user) {
+        throw new Error(textErrorNoUser);
+      }
+      res
+        .status(codOk)
+        .send(user);
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res
+          .status(codBadRequest)
+          .send(createdMessageErrorControllers(err));
+        return;
+      } if (err.message === textErrorNoUser) {
+        res
+          .status(codForbidden)
+          .send(createdMessageErrorControllers(err));
+      } else {
+        res
+          .status(codInternalServerError)
+          .send(createdMessageErrorControllers(err));
+      }
+    });
+};
