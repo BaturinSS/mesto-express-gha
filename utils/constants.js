@@ -7,6 +7,9 @@ module.exports.codCreated = 201;
 //* Сохраняем в константу код ответа «неправильный, некорректный запрос»
 module.exports.codBadRequest = 400;
 
+//* Сохраняем в константу код ответа «не авторизован (не представился)»
+module.exports.codUnauthorized = 401;
+
 //* Сохраняем в константу код ответа «не найдено»
 module.exports.codForbidden = 404;
 

@@ -1,3 +1,6 @@
+//* Импортируем модуль bcrypt для хеширования пароля
+const bcrypt = require('bcryptjs');
+
 //* Импорт модели данных
 const User = require('../models/user');
 
@@ -5,6 +8,7 @@ const User = require('../models/user');
 const {
   codOk, codCreated, codBadRequest, codForbidden,
   codInternalServerError, textErrorNoUser,
+  textErrorNoValidEmailPassword, codUnauthorized,
 } = require('../utils/constants');
 
 //* Импорт прочих функций из utils.js
@@ -110,28 +114,69 @@ module.exports.updateUserAvatar = (req, res) => {
       }
     });
 };
+//* Контроллер добавления в базу нового пользователя
 //* router.post('/', createUser)
 module.exports.createUser = (req, res) => {
-  User
-    .create(req.body)
-    .then((user) => {
-      res
-        .status(codCreated)
-        .send(user);
+  bcrypt.hash(req.body.password, 10)
+    .then((hash) => {
+      req.body.password = hash;
+      User
+        .create(req.body)
+        .then((user) => {
+          res
+            .status(codCreated)
+            .send(user);
+        })
+        .catch((err) => {
+          if (err.name === 'ValidationError') {
+            res
+              .status(codBadRequest)
+              .send(createdMessageErrorControllers(err));
+            return;
+          } if (err.name === 'MongoServerError') {
+            res
+              .status(codBadRequest)
+              .send(createdMessageErrorControllers(err));
+          } else {
+            res
+              .status(codInternalServerError)
+              .send(createdMessageErrorControllers(err));
+          }
+        });
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      res
+        .status(codInternalServerError)
+        .send(createdMessageErrorControllers(err));
+    });
+};
+//* Контроллер аутентификации(вход в приложение)
+module.exports.login = (req, res) => {
+  const { email, password } = req.body;
+  User
+    .findOne({ email })
+    .then((user) => {
+      if (!user) {
+        throw new Error(textErrorNoValidEmailPassword);
+      }
+      return bcrypt.compare(password, user.password);
+    })
+    .then((matched) => {
+      if (!matched) {
+        throw new Error(textErrorNoValidEmailPassword);
+      }
+      res
+        .status(codOk)
+        .send({ message: 'Всё верно!' });
+    })
+    .catch((err) => {
+      if (err.message === textErrorNoValidEmailPassword) {
         res
-          .status(codBadRequest)
-          .send(createdMessageErrorControllers(err));
-        return;
-      } if (err.name === 'MongoServerError') {
-        res
-          .status(codBadRequest)
+          .status(codUnauthorized)
           .send(createdMessageErrorControllers(err));
       } else {
         res
-          .status(codInternalServerError)
+          .status(codBadRequest)
           .send(createdMessageErrorControllers(err));
       }
     });
