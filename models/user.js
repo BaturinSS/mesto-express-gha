@@ -4,6 +4,9 @@ const mongoose = require('mongoose');
 //* Подключаем модуль для проверки данных на тип
 const validatorjs = require('validator');
 
+//* Импорт констант
+const { textErrorNoValid } = require('../utils/constants');
+
 //* Создаем схему для валидации данных в MongoDB
 const userSchema = new mongoose.Schema({
   name: {
@@ -23,7 +26,9 @@ const userSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: (value) => validatorjs.isURL(value),
+      message: (props) => `${textErrorNoValid} - '${props.value}'`,
     },
+    default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
   },
   email: {
     type: String,
@@ -31,6 +36,7 @@ const userSchema = new mongoose.Schema({
     unique: true,
     validate: {
       validator: (value) => validatorjs.isEmail(value),
+      message: (props) => `${textErrorNoValid} - '${props.value}'`,
     },
   },
   password: {

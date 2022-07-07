@@ -8,7 +8,7 @@ const {
 } = require('../utils/constants');
 
 //* Импорт прочих функций из utils.js
-const { createdMessageError } = require('../utils/utils');
+const { createdMessageErrorControllers } = require('../utils/utils');
 
 //* Экспорт функций в routes
 module.exports.getUsers = (req, res) => {
@@ -22,7 +22,7 @@ module.exports.getUsers = (req, res) => {
     .catch((err) => {
       res
         .status(codInternalServerError)
-        .send(createdMessageError(err));
+        .send(createdMessageErrorControllers(err));
     });
 };
 module.exports.getUser = (req, res) => {
@@ -40,11 +40,11 @@ module.exports.getUser = (req, res) => {
       if (err.message === textErrorNoUser) {
         res
           .status(codForbidden)
-          .send(createdMessageError(err));
+          .send(createdMessageErrorControllers(err));
       } else {
         res
           .status(codBadRequest)
-          .send(createdMessageError(err));
+          .send(createdMessageErrorControllers(err));
       }
     });
 };
@@ -66,15 +66,15 @@ module.exports.updateUser = (req, res) => {
       if (err.name === 'ValidationError') {
         res
           .status(codBadRequest)
-          .send(createdMessageError(err));
+          .send(createdMessageErrorControllers(err));
       } if (err.message === textErrorNoUser) {
         res
           .status(codForbidden)
-          .send(createdMessageError(err));
+          .send(createdMessageErrorControllers(err));
       } else {
         res
           .status(codInternalServerError)
-          .send(createdMessageError(err));
+          .send(createdMessageErrorControllers(err));
       }
     });
 };
@@ -96,15 +96,15 @@ module.exports.updateUserAvatar = (req, res) => {
       if (err.name === 'ValidationError') {
         res
           .status(codBadRequest)
-          .send(createdMessageError(err));
+          .send(createdMessageErrorControllers(err));
       } if (err.message === textErrorNoUser) {
         res
           .status(codForbidden)
-          .send(createdMessageError(err));
+          .send(createdMessageErrorControllers(err));
       } else {
         res
           .status(codInternalServerError)
-          .send(createdMessageError(err));
+          .send(createdMessageErrorControllers(err));
       }
     });
 };
@@ -120,11 +120,11 @@ module.exports.createUser = (req, res) => {
       if (err.name === 'ValidationError') {
         res
           .status(codBadRequest)
-          .send(createdMessageError(err));
+          .send(createdMessageErrorControllers(err));
       } else {
         res
           .status(codInternalServerError)
-          .send(createdMessageError(err));
+          .send(createdMessageErrorControllers(err));
       }
     });
 };

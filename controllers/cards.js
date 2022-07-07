@@ -8,7 +8,7 @@ const {
 } = require('../utils/constants');
 
 //* Импорт прочих функций из utils.js
-const { createdMessageError } = require('../utils/utils');
+const { createdMessageErrorControllers } = require('../utils/utils');
 
 //* Экспорт функций в routes
 module.exports.getCards = (req, res) => {
@@ -22,7 +22,7 @@ module.exports.getCards = (req, res) => {
     .catch((err) => {
       res
         .status(codInternalServerError)
-        .send(createdMessageError(err));
+        .send(createdMessageErrorControllers(err));
     });
 };
 module.exports.createCard = (req, res) => {
@@ -38,11 +38,11 @@ module.exports.createCard = (req, res) => {
       if (err.name === 'ValidationError') {
         res
           .status(codBadRequest)
-          .send(createdMessageError(err));
+          .send(createdMessageErrorControllers(err));
       } else {
         res
           .status(codInternalServerError)
-          .send(createdMessageError(err));
+          .send(createdMessageErrorControllers(err));
       }
     });
 };
@@ -61,11 +61,11 @@ module.exports.deleteCard = (req, res) => {
       if (err.message === textErrorNoCard) {
         res
           .status(codForbidden)
-          .send(createdMessageError(err));
+          .send(createdMessageErrorControllers(err));
       } else {
         res
           .status(codBadRequest)
-          .send(createdMessageError(err));
+          .send(createdMessageErrorControllers(err));
       }
     });
 };
@@ -88,11 +88,11 @@ module.exports.likeCard = (req, res) => {
       if (err.message === textErrorNoCard) {
         res
           .status(codForbidden)
-          .send(createdMessageError(err));
+          .send(createdMessageErrorControllers(err));
       } else {
         res
           .status(codBadRequest)
-          .send(createdMessageError(err));
+          .send(createdMessageErrorControllers(err));
       }
     });
 };
@@ -115,11 +115,11 @@ module.exports.dislikeCard = (req, res) => {
       if (err.message === textErrorNoCard) {
         res
           .status(codForbidden)
-          .send(createdMessageError(err));
+          .send(createdMessageErrorControllers(err));
       } else {
         res
           .status(codBadRequest)
-          .send(createdMessageError(err));
+          .send(createdMessageErrorControllers(err));
       }
     });
 };

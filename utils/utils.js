@@ -1,2 +1,2 @@
-//* Сохраняем в константу сообщение об ошибке
-module.exports.createdMessageError = (err) => ({ message: `${err.name}: ${err.message}` });
+//* Сохраняем в константу сообщение об ошибке для controllers
+module.exports.createdMessageErrorControllers = (err) => ({ message: `${err.name}: ${err.message}` });
