@@ -1,6 +1,9 @@
 //* Подключаем модуль для работы с базой данных в MongoDB
 const mongoose = require('mongoose');
 
+//* Подключаем модуль для проверки данных на тип
+const validatorjs = require('validator');
+
 //* Создаем схему для валидации данных в MongoDB
 const userSchema = new mongoose.Schema({
   name: {
@@ -18,11 +21,17 @@ const userSchema = new mongoose.Schema({
   avatar: {
     type: String,
     required: true,
+    validate: {
+      validator: (value) => validatorjs.isURL(value),
+    },
   },
   email: {
     type: String,
     required: true,
     unique: true,
+    validate: {
+      validator: (value) => validatorjs.isEmail(value),
+    },
   },
   password: {
     type: String,
