@@ -118,7 +118,7 @@ module.exports.updateUserAvatar = (req, res) => {
     });
 };
 //* Контроллер добавления в базу нового пользователя
-//* router.post('/signup', createUser);
+//* router.post('/sign-up', createUser);
 module.exports.createUser = (req, res) => {
   bcrypt.hash(req.body.password, 10)
     .then((hash) => {
@@ -154,7 +154,7 @@ module.exports.createUser = (req, res) => {
     });
 };
 //* Контроллер аутентификации(вход в приложение)
-//* router.post('/signin', login)
+//* router.post('/sign-in', login)
 module.exports.login = (req, res) => {
   const { NODE_ENV, JWT_SECRET } = process.env;
   User

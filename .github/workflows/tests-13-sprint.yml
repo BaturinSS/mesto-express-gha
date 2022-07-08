@@ -18,7 +18,7 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: 14.x
-    - name: Сheck if the repository is private
+    - name: Check if the repository is private
       run: exit 1
       if: ${{github.event.repository.private}}
     - name: Get testing lib
@@ -39,7 +39,7 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: 14.x
-    - name: Сheck if the repository is private
+    - name: Check if the repository is private
       run: exit 1
       if: ${{github.event.repository.private}}
     - name: Start MongoDB

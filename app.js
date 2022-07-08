@@ -64,7 +64,7 @@ app.use('/cards', cardsRouter);
 app.use('/', (req, res) => {
   res
     .status(404)
-    .send({ message: 'Страница не существет' });
+    .send({ message: 'Страница не существует' });
 });
 
 //* Передаем статичную страницу
@@ -72,7 +72,14 @@ app.use('/', (req, res) => {
 
 //* Централизованная обработка ошибок
 app.use((err, req, res, next) => {
-  res.status(500).send({ message: 'На сервере произошла ошибка' });
+  const { statusCode = 500, message } = err;
+  res
+    .status(statusCode)
+    .send({
+      message: statusCode === 500
+        ? 'На сервере произошла ошибка'
+        : message,
+    });
 });
 
 //* Установим слушателя на порт
