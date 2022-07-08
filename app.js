@@ -15,6 +15,12 @@ const bodyParser = require('body-parser');
 //* Подключаем модуль обработки запроса cookie
 const cookieParser = require('cookie-parser');
 
+//* Подключаем обработчик ошибок валидации celebrate
+const { errors } = require('celebrate');
+
+//* Подключаем валидацию Joi в качестве мидлвэр, будем использовать библиотеку celebrate
+const { celebrate, Joi } = require('celebrate');
+
 //* Подключаем модуль ограничения запросов к серверу
 const rateLimit = require('express-rate-limit');
 
@@ -55,8 +61,22 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.post('/sign-in', login);
-app.post('/sign-up', createUser);
+app.post('/sign-in', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().max(100).email(),
+    password: Joi.string().min(8).max(100).required(),
+  }),
+}), login);
+
+app.post('/sign-up', celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().min(2).max(30),
+    about: Joi.string().min(2).max(30),
+    avatar: Joi.string().max(500).uri(),
+    email: Joi.string().required().max(100).email(),
+    password: Joi.string().min(8).max(100).required(),
+  }),
+}), createUser);
 
 app.use(auth);
 app.use('/users', usersRouter);
@@ -66,6 +86,9 @@ app.use('/', (req, res) => {
     .status(404)
     .send({ message: 'Страница не существует' });
 });
+
+//* Обрабатываем ошибки с celebrate
+app.use(errors());
 
 //* Передаем статичную страницу
 // app.use(express.static(path.join(__dirname, 'public')));
@@ -80,6 +103,7 @@ app.use((err, req, res, next) => {
         ? 'На сервере произошла ошибка'
         : message,
     });
+  next();
 });
 
 //* Установим слушателя на порт

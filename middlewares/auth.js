@@ -6,6 +6,7 @@ const { textErrorAuthRequired } = require('../utils/constants');
 
 // eslint-disable-next-line consistent-return
 module.exports = (req, res, next) => {
+  const { NODE_ENV, JWT_SECRET } = process.env;
   const token = req.cookies.jwt;
   if (!token) {
     return res
@@ -14,7 +15,12 @@ module.exports = (req, res, next) => {
   }
   let payload;
   try {
-    payload = jwt.verify(token, 'some-secret-key');
+    payload = jwt.verify(
+      token,
+      NODE_ENV === 'production'
+        ? JWT_SECRET
+        : 'b83c3dde3d27152bd25553962',
+    );
   } catch (err) {
     return res
       .status(401)

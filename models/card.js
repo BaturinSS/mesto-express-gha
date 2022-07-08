@@ -18,6 +18,7 @@ const cardSchema = new mongoose.Schema({
   link: {
     type: String,
     required: true,
+    maxlength: 500,
     validate: {
       validator: (value) => validatorjs.isURL(value),
       message: (props) => `${textErrorNoValid} - '${props.value}'`,

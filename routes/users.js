@@ -1,6 +1,9 @@
 //* Oбъект связанный с app, на который мы и повесим обработчики
 const router = require('express').Router();
 
+//* Подключаем валидацию Joi в качестве мидлвэр, будем использовать библиотеку celebrate
+const { celebrate, Joi } = require('celebrate');
+
 //* Импорт функций controllers
 const {
   getUsers, getUser, getUserInfo,
@@ -11,9 +14,22 @@ const {
 router
   .get('/', getUsers)
   .get('/me', getUserInfo)
-  .get('/:id', getUser)
-  .patch('/me', updateUser)
-  .patch('/me/avatar', updateUserAvatar);
+  .get('/:id', celebrate({
+    params: Joi.object().keys({
+      id: Joi.string().required().hex().length(24),
+    }),
+  }), getUser)
+  .patch('/me', celebrate({
+    body: Joi.object().keys({
+      name: Joi.string().required().min(2).max(30),
+      about: Joi.string().required().min(2).max(30),
+    }),
+  }), updateUser)
+  .patch('/me/avatar', celebrate({
+    body: Joi.object().keys({
+      avatar: Joi.string().required().max(500).uri(),
+    }),
+  }), updateUserAvatar);
 
 //* Экспортировали роутер
 module.exports = router;
