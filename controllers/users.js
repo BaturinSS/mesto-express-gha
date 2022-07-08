@@ -164,7 +164,7 @@ module.exports.login = (req, res) => {
         { _id: user._id },
         NODE_ENV === 'production'
           ? JWT_SECRET
-          : 'some-secret-key',
+          : 'b83c3dde3d27152bd25553962a6f7697182946234c1990ec35eb24c8945dc263',
         { expiresIn: '7d' },
       );
       res
