@@ -1,5 +1,10 @@
+require('dotenv').config();
+
 //* Подключаем фреймворк express для сервера на ноде
 const express = require('express');
+
+//* Подключаем модуль для повышения безопасности сервера
+const helmet = require('helmet');
 
 //* Подключаем модуль для работы с базой данных в MongoDB
 const mongoose = require('mongoose');
@@ -9,6 +14,9 @@ const bodyParser = require('body-parser');
 
 //* Подключаем модуль обработки запроса cookie
 const cookieParser = require('cookie-parser');
+
+//* Подключаем модуль ограничения запросов к серверу
+const rateLimit = require('express-rate-limit');
 
 //* Подключаем модуль, предоставляет утилиты для работы с путями к файлам и каталогам
 // const path = require('path');
@@ -34,7 +42,15 @@ const { login, createUser } = require('./controllers/users');
 //* Импорт мидлвэр авторизации для зашиты роутов
 const auth = require('./middlewares/auth');
 
+//* Ограничение количества запросов к серверу
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+});
+
 //* Обрабатываем запрос
+app.use(limiter);
+app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());

@@ -156,10 +156,17 @@ module.exports.createUser = (req, res) => {
 //* Контроллер аутентификации(вход в приложение)
 //* router.post('/signin', login)
 module.exports.login = (req, res) => {
+  const { NODE_ENV, JWT_SECRET } = process.env;
   User
     .findUserByCredentials(req.body)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
+      const token = jwt.sign(
+        { _id: user._id },
+        NODE_ENV === 'production'
+          ? JWT_SECRET
+          : 'some-secret-key',
+        { expiresIn: '7d' },
+      );
       res
         .cookie('jwt', token, {
           maxAge: 3600000,
