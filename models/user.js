@@ -46,13 +46,14 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     minlength: 6,
+    select: false,
   },
 });
 
 //* Собственные метод модели
 // eslint-disable-next-line func-names
 userSchema.statics.findUserByCredentials = function ({ email, password }) {
-  return this.findOne({ email })
+  return this.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
         throw new Error(textErrorNoValidEmailPassword);

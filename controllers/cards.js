@@ -48,14 +48,24 @@ module.exports.createCard = (req, res) => {
 };
 module.exports.deleteCard = (req, res) => {
   Card
-    .findByIdAndRemove(req.params.cardId)
+    .findById(req.params.cardId)
     .then((card) => {
       if (!card) {
         throw new Error(textErrorNoCard);
+      } else if (card.owner.toHexString() !== req.user._id) {
+        throw new Error('Можно удалять только свои карточки!');
       }
-      res
-        .status(codOk)
-        .send({ message: 'Пост удалён', card });
+      card.remove()
+        .then(() => {
+          res
+            .status(codOk)
+            .send({ message: 'Пост удалён', card });
+        })
+        .catch((err) => {
+          res
+            .status(codBadRequest)
+            .send(createdMessageErrorControllers(err));
+        });
     })
     .catch((err) => {
       if (err.message === textErrorNoCard) {
