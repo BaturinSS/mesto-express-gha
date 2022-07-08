@@ -70,5 +70,10 @@ app.use('/', (req, res) => {
 //* Передаем статичную страницу
 // app.use(express.static(path.join(__dirname, 'public')));
 
+//* Централизованная обработка ошибок
+app.use((err, req, res, next) => {
+  res.status(500).send({ message: 'На сервере произошла ошибка' });
+});
+
 //* Установим слушателя на порт
 app.listen(PORT);
