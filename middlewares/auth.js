@@ -12,7 +12,7 @@ module.exports = (req, res, next) => {
   const { NODE_ENV, JWT_SECRET } = process.env;
   const token = req.cookies.jwt;
   if (!token) {
-    next(new AuthError(textErrorAuthRequired));
+    throw (new AuthError(textErrorAuthRequired));
   }
   let payload;
   try {

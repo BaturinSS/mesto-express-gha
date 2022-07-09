@@ -29,7 +29,6 @@ const userSchema = new mongoose.Schema({
   },
   avatar: {
     type: String,
-    maxlength: 500,
     validate: {
       validator(value) {
         return /^(https?:\/\/(www\.)?([a-zA-z0-9-]{1}[a-zA-z0-9-]*\.?)*\.{1}([a-zA-z0-9]){2,8}(\/?([a-zA-z0-9-])*\/?)*\/?([-._~:?#[]@!\$&'\(\)\*\+,;=])*)/.test(value);
@@ -41,7 +40,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    maxlength: 100,
     validate: {
       validator: (value) => validatorjs.isEmail(value),
     },
@@ -49,8 +47,6 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-    minlength: 8,
-    maxlength: 100,
     select: false,
   },
 });

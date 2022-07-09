@@ -3,7 +3,7 @@ const Card = require('../models/card');
 
 //* Импорт констант
 const {
-  codOk, codCreated,
+  codCreated,
   textErrorValidation, textMessageDeleteCard,
   textErrorAccess, textErrorNoCard,
 } = require('../utils/constants');
@@ -23,7 +23,6 @@ module.exports.getCards = (req, res, next) => {
     .find({})
     .then((cards) => {
       res
-        .status(codOk)
         .send(cards);
     })
     .catch((err) => {
@@ -59,7 +58,6 @@ module.exports.deleteCard = (req, res, next) => {
       card.remove()
         .then(() => {
           res
-            .status(codOk)
             .send({ message: textMessageDeleteCard, card });
         })
         .catch(next);
@@ -78,7 +76,6 @@ module.exports.likeCard = (req, res, next) => {
         throw new NotFoundError(textErrorNoCard);
       }
       res
-        .status(codOk)
         .send(card);
     })
     .catch(next);
@@ -95,7 +92,6 @@ module.exports.dislikeCard = (req, res, next) => {
         throw new NotFoundError(textErrorNoCard);
       }
       res
-        .status(codOk)
         .send(card);
     })
     .catch(next);

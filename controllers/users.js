@@ -9,7 +9,7 @@ const User = require('../models/user');
 
 //* Импорт констант
 const {
-  codOk, codCreated, textErrorNoUser,
+  codCreated, textErrorNoUser,
   textErrorValidation, textErrorConflict,
 } = require('../utils/constants');
 
@@ -28,7 +28,6 @@ module.exports.getUsers = (req, res, next) => {
     .find({})
     .then((users) => {
       res
-        .status(codOk)
         .send(users);
     })
     .catch(next);
@@ -41,7 +40,6 @@ module.exports.getUser = (req, res, next) => {
         throw new NotFoundError(textErrorNoUser);
       }
       res
-        .status(codOk)
         .send(user);
     })
     .catch(next);
@@ -57,7 +55,6 @@ module.exports.updateUser = (req, res, next) => {
         throw new NotFoundError(textErrorNoUser);
       }
       res
-        .status(codOk)
         .send(user);
     })
     .catch((err) => {
@@ -79,7 +76,6 @@ module.exports.updateUserAvatar = (req, res, next) => {
         throw new NotFoundError(textErrorNoUser);
       }
       res
-        .status(codOk)
         .send(user);
     })
     .catch((err) => {
@@ -143,7 +139,6 @@ module.exports.login = (req, res, next) => {
           maxAge: 3600000,
           httpOnly: true,
         })
-        .status(codOk)
         .send({ message: 'Всё верно!' });
     })
     .catch(next);
@@ -155,7 +150,6 @@ module.exports.getUserInfo = (req, res, next) => {
         throw new NotFoundError(textErrorNoUser);
       }
       res
-        .status(codOk)
         .send(user);
     })
     .catch((err) => {
