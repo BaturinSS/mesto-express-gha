@@ -55,7 +55,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //* Обрабатываем куки через модуль cookie-parser
 app.use(cookieParser());
 
-//* Обрабатываем все routs
+//* Обрабатываем все routes
 app.use(routes);
 
 //* Обрабатываем ошибки с celebrate
