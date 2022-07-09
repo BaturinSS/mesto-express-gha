@@ -4,6 +4,7 @@
   "description": "Проект Mesto фронтенд + бэкенд",
   "main": "app.js",
   "scripts": {
+    "test": "jest",
     "start": "node app.js",
     "lint": "npx eslint .",
     "lint-fix": "npx eslint . --fix",
