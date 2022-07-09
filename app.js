@@ -18,23 +18,14 @@ const cookieParser = require('cookie-parser');
 //* Подключаем обработчик ошибок валидации celebrate
 const { errors } = require('celebrate');
 
-//* Подключаем валидацию Joi в качестве мидлвэр, будем использовать библиотеку celebrate
-const { celebrate, Joi } = require('celebrate');
-
 //* Подключаем модуль ограничения запросов к серверу
 const rateLimit = require('express-rate-limit');
 
-//* Подключаем модуль, предоставляет утилиты для работы с путями к файлам и каталогам
-// const path = require('path');
+//* Подключаем обработчик router
+const routes = require('./routes/index');
 
 //* Возьмём порт (по умолчанию 3000) из переменной окружения
 const { PORT = 3000 } = process.env;
-
-//* Импортировать модуль users
-const usersRouter = require('./routes/users');
-
-//* Импортировать модуль cards
-const cardsRouter = require('./routes/cards');
 
 //* Создаем приложение методом express
 const app = express();
@@ -42,21 +33,8 @@ const app = express();
 //* Подключаемся к серверу mongo
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
-//* Импорт controllers
-const { login, createUser } = require('./controllers/users');
-
-//* Импорт мидлвэр авторизации для зашиты роутов
-const auth = require('./middlewares/auth');
-
-//* Импорт констант
-const {
-  codInternalServerError,
-  textErrorInternalServer,
-  textErrorNotFound,
-} = require('./utils/constants');
-
-//* Импорт классового элемента ошибки
-const NotFoundError = require('./errors/NotFoundError');
+//* Импорт мидлвэр централизованной обработки ошибок
+const handlingErrors = require('./middlewares/handlingErrors');
 
 //* Ограничение количества запросов к серверу
 const limiter = rateLimit({
@@ -64,55 +42,27 @@ const limiter = rateLimit({
   max: 100,
 });
 
-//* Обрабатываем запрос
+//* Обрабатываем количество запросов к серверу
 app.use(limiter);
+
+//* Повышаем безопасность запроса через модуль helmet
 app.use(helmet());
+
+//* Обрабатываем тело запроса через модуль body-parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+//* Обрабатываем куки через модуль cookie-parser
 app.use(cookieParser());
 
-app.post('/signin', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().max(100).email(),
-    password: Joi.string().min(8).max(100).required(),
-  }),
-}), login);
-
-app.post('/signup', celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(30),
-    avatar: Joi.string().max(500).uri().regex(/^(https?:\/\/(www\.)?([a-zA-z0-9-]{1}[a-zA-z0-9-]*\.?)*\.{1}([a-zA-z0-9]){2,8}(\/?([a-zA-z0-9-])*\/?)*\/?([-._~:?#[]@!\$&'\(\)\*\+,;=])*)/),
-    email: Joi.string().required().max(100).email(),
-    password: Joi.string().min(8).max(100).required(),
-  }),
-}), createUser);
-
-app.use(auth);
-app.use('/users', usersRouter);
-app.use('/cards', cardsRouter);
-app.use('/', (req, res, next) => {
-  next(new NotFoundError(textErrorNotFound));
-});
+//* Обрабатываем все routs
+app.use(routes);
 
 //* Обрабатываем ошибки с celebrate
 app.use(errors());
 
-//* Передаем статичную страницу
-// app.use(express.static(path.join(__dirname, 'public')));
-
 //* Централизованная обработка ошибок
-app.use((err, req, res, next) => {
-  const { statusCode = codInternalServerError, message } = err;
-  res
-    .status(statusCode)
-    .send({
-      message: statusCode === codInternalServerError
-        ? textErrorInternalServer
-        : message,
-    });
-  next();
-});
+app.use(handlingErrors);
 
 //* Установим слушателя на порт
 app.listen(PORT);
