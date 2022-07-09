@@ -29,7 +29,7 @@ module.exports.textErrorValidation = 'Введены некорректные д
 module.exports.textMessageDeleteCard = 'Карточка удалёна';
 
 //* Сохраним в константу текст ошибки 'Можно удалять только свои карточки!'
-module.exports.textErrorAccess = 'Можно удалять только свои карточки!';
+module.exports.textErrorAccess = 'Можно удалять, только свои карточки!';
 
 //* Сохраним в константу текст ошибки 'Такой пользователь уже существует!'
 module.exports.textErrorConflict = 'Такой пользователь уже существует!';

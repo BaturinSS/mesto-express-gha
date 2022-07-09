@@ -30,6 +30,9 @@ const { PORT = 3000 } = process.env;
 //* Создаем приложение методом express
 const app = express();
 
+//* Подключаем модуль для логирования
+const { requestLogger, errorLogger } = require('./middlewares/logger');
+
 //* Подключаемся к серверу mongo
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
@@ -55,8 +58,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //* Обрабатываем куки через модуль cookie-parser
 app.use(cookieParser());
 
+//* Подключаем логгер запросов
+app.use(requestLogger);
+
 //* Обрабатываем все routes
 app.use(routes);
+
+//* Подключаем логгер ошибок
+app.use(errorLogger);
 
 //* Обрабатываем ошибки с celebrate
 app.use(errors());
