@@ -9,16 +9,21 @@ const User = require('../models/user');
 
 //* Импорт констант
 const {
-  codOk, codCreated, codBadRequest, codForbidden,
-  codInternalServerError, textErrorNoUser,
-  textErrorNoValidEmailPassword, codUnauthorized,
+  codOk, codCreated, textErrorNoUser,
+  textErrorValidation, textErrorConflict,
 } = require('../utils/constants');
 
-//* Импорт прочих функций из utils.js
-const { createdMessageErrorControllers } = require('../utils/utils');
+//* Импорт классового элемента ошибки
+const NotFoundError = require('../errors/NotFoundError');
+
+//* Импорт классового элемента ошибки
+const ValidationError = require('../errors/ValidationError');
+
+//* Импорт классового элемента ошибки
+const ConflictError = require('../errors/ConflictError');
 
 //* Экспорт функций в routes
-module.exports.getUsers = (req, res) => {
+module.exports.getUsers = (req, res, next) => {
   User
     .find({})
     .then((users) => {
@@ -26,36 +31,22 @@ module.exports.getUsers = (req, res) => {
         .status(codOk)
         .send(users);
     })
-    .catch((err) => {
-      res
-        .status(codInternalServerError)
-        .send(createdMessageErrorControllers(err));
-    });
+    .catch(next);
 };
-module.exports.getUser = (req, res) => {
+module.exports.getUser = (req, res, next) => {
   User
     .findById(req.params.id)
     .then((user) => {
       if (!user) {
-        throw new Error(textErrorNoUser);
+        throw new NotFoundError(textErrorNoUser);
       }
       res
         .status(codOk)
         .send(user);
     })
-    .catch((err) => {
-      if (err.message === textErrorNoUser) {
-        res
-          .status(codForbidden)
-          .send(createdMessageErrorControllers(err));
-      } else {
-        res
-          .status(codBadRequest)
-          .send(createdMessageErrorControllers(err));
-      }
-    });
+    .catch(next);
 };
-module.exports.updateUser = (req, res) => {
+module.exports.updateUser = (req, res, next) => {
   User
     .findByIdAndUpdate(req.user._id, req.body, {
       new: true,
@@ -63,7 +54,7 @@ module.exports.updateUser = (req, res) => {
     })
     .then((user) => {
       if (!user) {
-        throw new Error(textErrorNoUser);
+        throw new NotFoundError(textErrorNoUser);
       }
       res
         .status(codOk)
@@ -71,22 +62,13 @@ module.exports.updateUser = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res
-          .status(codBadRequest)
-          .send(createdMessageErrorControllers(err));
-        return;
-      } if (err.message === textErrorNoUser) {
-        res
-          .status(codForbidden)
-          .send(createdMessageErrorControllers(err));
+        next(new ValidationError(textErrorValidation));
       } else {
-        res
-          .status(codInternalServerError)
-          .send(createdMessageErrorControllers(err));
+        next(err);
       }
     });
 };
-module.exports.updateUserAvatar = (req, res) => {
+module.exports.updateUserAvatar = (req, res, next) => {
   User
     .findByIdAndUpdate(req.user._id, req.body, {
       new: true,
@@ -94,7 +76,7 @@ module.exports.updateUserAvatar = (req, res) => {
     })
     .then((user) => {
       if (!user) {
-        throw new Error(textErrorNoUser);
+        throw new NotFoundError(textErrorNoUser);
       }
       res
         .status(codOk)
@@ -102,60 +84,43 @@ module.exports.updateUserAvatar = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res
-          .status(codBadRequest)
-          .send(createdMessageErrorControllers(err));
-        return;
-      } if (err.message === textErrorNoUser) {
-        res
-          .status(codForbidden)
-          .send(createdMessageErrorControllers(err));
+        next(new ValidationError(textErrorValidation));
       } else {
-        res
-          .status(codInternalServerError)
-          .send(createdMessageErrorControllers(err));
+        next(err);
       }
     });
 };
 //* Контроллер добавления в базу нового пользователя
 //* router.post('/sign-up', createUser);
-module.exports.createUser = (req, res) => {
+module.exports.createUser = (req, res, next) => {
   bcrypt.hash(req.body.password, 10)
     .then((hash) => {
       req.body.password = hash;
       User
         .create(req.body)
         .then((user) => {
+          if (!user) {
+            throw new NotFoundError(textErrorNoUser);
+          }
           res
             .status(codCreated)
             .send(user);
         })
         .catch((err) => {
           if (err.name === 'ValidationError') {
-            res
-              .status(codBadRequest)
-              .send(createdMessageErrorControllers(err));
-            return;
-          } if (err.name === 'MongoServerError') {
-            res
-              .status(codBadRequest)
-              .send(createdMessageErrorControllers(err));
+            next(new ValidationError(textErrorValidation));
+          } else if (err.name === 'MongoServerError') {
+            next(new ConflictError(textErrorConflict));
           } else {
-            res
-              .status(codInternalServerError)
-              .send(createdMessageErrorControllers(err));
+            next(err);
           }
         });
     })
-    .catch((err) => {
-      res
-        .status(codInternalServerError)
-        .send(createdMessageErrorControllers(err));
-    });
+    .catch(next);
 };
 //* Контроллер аутентификации(вход в приложение)
 //* router.post('/sign-in', login)
-module.exports.login = (req, res) => {
+module.exports.login = (req, res, next) => {
   const { NODE_ENV, JWT_SECRET } = process.env;
   User
     .findUserByCredentials(req.body)
@@ -175,23 +140,13 @@ module.exports.login = (req, res) => {
         .status(codOk)
         .send({ message: 'Всё верно!' });
     })
-    .catch((err) => {
-      if (err.message === textErrorNoValidEmailPassword) {
-        res
-          .status(codUnauthorized)
-          .send(createdMessageErrorControllers(err));
-      } else {
-        res
-          .status(codBadRequest)
-          .send(createdMessageErrorControllers(err));
-      }
-    });
+    .catch(next);
 };
-module.exports.getUserInfo = (req, res) => {
+module.exports.getUserInfo = (req, res, next) => {
   User.findById(req.user._id)
     .then((user) => {
       if (!user) {
-        throw new Error(textErrorNoUser);
+        throw new NotFoundError(textErrorNoUser);
       }
       res
         .status(codOk)
@@ -199,18 +154,9 @@ module.exports.getUserInfo = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res
-          .status(codBadRequest)
-          .send(createdMessageErrorControllers(err));
-        return;
-      } if (err.message === textErrorNoUser) {
-        res
-          .status(codForbidden)
-          .send(createdMessageErrorControllers(err));
+        next(new ValidationError(textErrorValidation));
       } else {
-        res
-          .status(codInternalServerError)
-          .send(createdMessageErrorControllers(err));
+        next(err);
       }
     });
 };

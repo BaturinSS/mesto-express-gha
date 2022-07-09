@@ -8,7 +8,10 @@ const bcrypt = require('bcryptjs');
 const validatorjs = require('validator');
 
 //* Импорт констант
-const { textErrorNoValid, textErrorNoValidEmailPassword } = require('../utils/constants');
+const { textErrorNoValidEmailPassword } = require('../utils/constants');
+
+//* Импорт классового элемента ошибки
+const AuthError = require('../errors/AuthError');
 
 //* Создаем схему для валидации данных в MongoDB
 const userSchema = new mongoose.Schema({
@@ -31,7 +34,6 @@ const userSchema = new mongoose.Schema({
       validator(value) {
         return /^(https?:\/\/(www\.)?([a-zA-z0-9-]{1}[a-zA-z0-9-]*\.?)*\.{1}([a-zA-z0-9]){2,8}(\/?([a-zA-z0-9-])*\/?)*\/?([-._~:?#[]@!\$&'\(\)\*\+,;=])*)/.test(value);
       },
-      message: (props) => `${textErrorNoValid} - '${props.value}'`,
     },
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
   },
@@ -42,7 +44,6 @@ const userSchema = new mongoose.Schema({
     maxlength: 100,
     validate: {
       validator: (value) => validatorjs.isEmail(value),
-      message: (props) => `${textErrorNoValid} - '${props.value}'`,
     },
   },
   password: {
@@ -60,12 +61,12 @@ userSchema.statics.findUserByCredentials = function ({ email, password }) {
   return this.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        throw new Error(textErrorNoValidEmailPassword);
+        throw new AuthError(textErrorNoValidEmailPassword);
       }
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            throw new Error(textErrorNoValidEmailPassword);
+            throw new AuthError(textErrorNoValidEmailPassword);
           }
           return user;
         });

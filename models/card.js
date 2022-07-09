@@ -4,9 +4,6 @@ const mongoose = require('mongoose');
 //* Подключаем модуль для проверки данных на тип
 const validatorjs = require('validator');
 
-//* Импорт констант
-const { textErrorNoValid } = require('../utils/constants');
-
 //* Создаем схему для валидации данных в MongoDB
 const cardSchema = new mongoose.Schema({
   name: {
@@ -21,7 +18,6 @@ const cardSchema = new mongoose.Schema({
     maxlength: 500,
     validate: {
       validator: (value) => validatorjs.isURL(value),
-      message: (props) => `${textErrorNoValid} - '${props.value}'`,
     },
   },
   owner: {

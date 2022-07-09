@@ -48,6 +48,16 @@ const { login, createUser } = require('./controllers/users');
 //* Импорт мидлвэр авторизации для зашиты роутов
 const auth = require('./middlewares/auth');
 
+//* Импорт констант
+const {
+  codInternalServerError,
+  textErrorInternalServer,
+  textErrorNotFound,
+} = require('./utils/constants');
+
+//* Импорт классового элемента ошибки
+const NotFoundError = require('./errors/NotFoundError');
+
 //* Ограничение количества запросов к серверу
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -81,10 +91,8 @@ app.post('/sign-up', celebrate({
 app.use(auth);
 app.use('/users', usersRouter);
 app.use('/cards', cardsRouter);
-app.use('/', (req, res) => {
-  res
-    .status(404)
-    .send({ message: 'Страница не существует' });
+app.use('/', (req, res, next) => {
+  next(new NotFoundError(textErrorNotFound));
 });
 
 //* Обрабатываем ошибки с celebrate
@@ -95,12 +103,12 @@ app.use(errors());
 
 //* Централизованная обработка ошибок
 app.use((err, req, res, next) => {
-  const { statusCode = 500, message } = err;
+  const { statusCode = codInternalServerError, message } = err;
   res
     .status(statusCode)
     .send({
-      message: statusCode === 500
-        ? 'На сервере произошла ошибка'
+      message: statusCode === codInternalServerError
+        ? textErrorInternalServer
         : message,
     });
   next();

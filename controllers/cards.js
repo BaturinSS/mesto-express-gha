@@ -3,15 +3,22 @@ const Card = require('../models/card');
 
 //* Импорт констант
 const {
-  codOk, codCreated, codBadRequest, codForbidden,
-  codInternalServerError, textErrorNoCard,
+  codOk, codCreated,
+  textErrorValidation, textMessageDeleteCard,
+  textErrorAccess, textErrorNoCard,
 } = require('../utils/constants');
 
-//* Импорт прочих функций из utils.js
-const { createdMessageErrorControllers } = require('../utils/utils');
+//* Импорт классового элемента ошибки
+const ValidationError = require('../errors/ValidationError');
+
+//* Импорт классового элемента ошибки
+const AccessError = require('../errors/AccessError');
+
+//* Импорт классового элемента ошибки
+const NotFoundError = require('../errors/NotFoundError');
 
 //* Экспорт функций в routes
-module.exports.getCards = (req, res) => {
+module.exports.getCards = (req, res, next) => {
   Card
     .find({})
     .then((cards) => {
@@ -20,12 +27,10 @@ module.exports.getCards = (req, res) => {
         .send(cards);
     })
     .catch((err) => {
-      res
-        .status(codInternalServerError)
-        .send(createdMessageErrorControllers(err));
+      next(err);
     });
 };
-module.exports.createCard = (req, res) => {
+module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
   Card
     .create({ name, link, owner: req.user._id })
@@ -36,50 +41,32 @@ module.exports.createCard = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res
-          .status(codBadRequest)
-          .send(createdMessageErrorControllers(err));
+        next(new ValidationError(textErrorValidation));
       } else {
-        res
-          .status(codInternalServerError)
-          .send(createdMessageErrorControllers(err));
+        next(err);
       }
     });
 };
-module.exports.deleteCard = (req, res) => {
+module.exports.deleteCard = (req, res, next) => {
   Card
     .findById(req.params.cardId)
     .then((card) => {
       if (!card) {
-        throw new Error(textErrorNoCard);
+        throw new NotFoundError(textErrorNoCard);
       } else if (card.owner.toHexString() !== req.user._id) {
-        throw new Error('Можно удалять только свои карточки!');
+        throw new AccessError(textErrorAccess);
       }
       card.remove()
         .then(() => {
           res
             .status(codOk)
-            .send({ message: 'Пост удалён', card });
+            .send({ message: textMessageDeleteCard, card });
         })
-        .catch((err) => {
-          res
-            .status(codBadRequest)
-            .send(createdMessageErrorControllers(err));
-        });
+        .catch(next);
     })
-    .catch((err) => {
-      if (err.message === textErrorNoCard) {
-        res
-          .status(codForbidden)
-          .send(createdMessageErrorControllers(err));
-      } else {
-        res
-          .status(codBadRequest)
-          .send(createdMessageErrorControllers(err));
-      }
-    });
+    .catch(next);
 };
-module.exports.likeCard = (req, res) => {
+module.exports.likeCard = (req, res, next) => {
   Card
     .findByIdAndUpdate(
       req.params.cardId,
@@ -88,25 +75,15 @@ module.exports.likeCard = (req, res) => {
     )
     .then((card) => {
       if (!card) {
-        throw new Error(textErrorNoCard);
+        throw new NotFoundError(textErrorNoCard);
       }
       res
         .status(codOk)
         .send(card);
     })
-    .catch((err) => {
-      if (err.message === textErrorNoCard) {
-        res
-          .status(codForbidden)
-          .send(createdMessageErrorControllers(err));
-      } else {
-        res
-          .status(codBadRequest)
-          .send(createdMessageErrorControllers(err));
-      }
-    });
+    .catch(next);
 };
-module.exports.dislikeCard = (req, res) => {
+module.exports.dislikeCard = (req, res, next) => {
   Card
     .findByIdAndUpdate(
       req.params.cardId,
@@ -115,21 +92,11 @@ module.exports.dislikeCard = (req, res) => {
     )
     .then((card) => {
       if (!card) {
-        throw new Error(textErrorNoCard);
+        throw new NotFoundError(textErrorNoCard);
       }
       res
         .status(codOk)
         .send(card);
     })
-    .catch((err) => {
-      if (err.message === textErrorNoCard) {
-        res
-          .status(codForbidden)
-          .send(createdMessageErrorControllers(err));
-      } else {
-        res
-          .status(codBadRequest)
-          .send(createdMessageErrorControllers(err));
-      }
-    });
+    .catch(next);
 };
