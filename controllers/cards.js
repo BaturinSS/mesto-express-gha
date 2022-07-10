@@ -50,7 +50,6 @@ module.exports.deleteCard = (req, res, next) => {
   Card
     .findById(req.params.cardId)
     .then((card) => {
-      console.log(new AccessError(textErrorAccess));
       if (!card) {
         throw new NotFoundError(textErrorNoCard);
       } else if (card.owner.toHexString() !== req.user._id) {
