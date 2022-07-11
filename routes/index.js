@@ -21,7 +21,6 @@ const NotFoundError = require('../errors/NotFoundError');
 
 //* Импорт констант
 const { textErrorNotFound } = require('../utils/constants');
-//* Краш-тест сервера
 
 router
   //* Краш-тест сервера
