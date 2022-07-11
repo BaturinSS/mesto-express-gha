@@ -7,13 +7,7 @@ const whitelist = [
 ];
 
 const corsOptions = {
-  origin(origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error());
-    }
-  },
+  origin: whitelist,
   optionsSuccessStatus: 200,
   credentials: true,
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
