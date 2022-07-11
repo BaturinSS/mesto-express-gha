@@ -13,3 +13,4 @@
 [Ссылка на фронтенд](https://novo.nomoredomains.xyz/)  
 [Ссылка на репозиторий фронтенда](https://github.com/BaturinSS/react-mesto-auth/)  
 ---
+[Ссылка на сервер на GitHab pages](https://baturinss.github.io/express-mesto-gha/)  
