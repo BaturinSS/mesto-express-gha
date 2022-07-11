@@ -3,8 +3,8 @@ require('dotenv').config();
 //* Подключаем фреймворк express для сервера на ноде
 const express = require('express');
 
-//* Подключаем модуль для повышения безопасности сервера
-const helmet = require('helmet');
+// //* Подключаем модуль для повышения безопасности сервера
+// const helmet = require('helmet');
 
 //* Подключаем модуль для работы с базой данных в MongoDB
 const mongoose = require('mongoose');
@@ -50,11 +50,15 @@ const limiter = rateLimit({
 //* Обрабатываем количество запросов к серверу
 app.use(limiter);
 
-//* Повышаем безопасность запроса через модуль helmet
-app.use(helmet());
+// //* Повышаем безопасность запроса через модуль helmet
+// app.use(helmet());
 
 //* Обрабатываем тело запроса через модуль body-parser
 app.use(bodyParser.json());
+
+//* Обрабатывает CORS запроса
+app.options('*', cors);
+app.use(cors);
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -63,10 +67,6 @@ app.use(cookieParser());
 
 //* Подключаем логгер запросов
 app.use(requestLogger);
-
-//* Обрабатывает CORS запроса
-app.options('*', cors);
-app.use(cors);
 
 //* Обрабатываем все routes
 app.use(routes);
