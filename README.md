@@ -7,6 +7,9 @@
 `npm run dev` — запускает сервер с hot-reload  
 
 ## Ссылка на проект
-[Ссылка на сайт](https://baturinss.github.io/express-mesto-gha/)  
-[Ссылка на репозиторий](https://github.com/BaturinSS/express-mesto-gha/)  
+[Ссылка на сервер](https://novoapi.nomoredomains.xyz/)  
+[Ссылка на репозиторий сервера](https://github.com/BaturinSS/express-mesto-gha/)  
+---
+[Ссылка на фронтенд](https://novo.nomoredomains.xyz/)  
+[Ссылка на репозиторий фронтенда](https://github.com/BaturinSS/react-mesto-auth/)  
 ---
