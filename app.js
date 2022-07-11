@@ -24,8 +24,8 @@ const rateLimit = require('express-rate-limit');
 //* Подключаем обработчик router
 const routes = require('./routes/index');
 
-// //* Подключаем обработчик CORS
-// const cors = require('./middlewares/cors');
+//* Подключаем обработчик CORS
+const cors = require('./middlewares/cors');
 
 //* Возьмём порт (по умолчанию 3000) из переменной окружения
 const { PORT = 3000 } = process.env;
@@ -65,9 +65,9 @@ app.use(cookieParser());
 //* Подключаем логгер запросов
 app.use(requestLogger);
 
-// //* Обрабатывает CORS запроса
-// app.options('*', cors);
-// app.use(cors);
+//* Обрабатывает CORS запроса
+app.options('*', cors);
+app.use(cors);
 
 //* Обрабатываем все routes
 app.use(routes);
