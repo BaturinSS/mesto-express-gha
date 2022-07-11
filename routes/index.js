@@ -21,8 +21,15 @@ const NotFoundError = require('../errors/NotFoundError');
 
 //* Импорт констант
 const { textErrorNotFound } = require('../utils/constants');
+//* Краш-тест сервера
 
 router
+  //* Краш-тест сервера
+  .get('/crash-test', () => {
+    setTimeout(() => {
+      throw new Error('Сервер сейчас упадёт');
+    }, 0);
+  })
   .post('/signin', celebrate({
     body: Joi.object().keys({
       email: Joi.string().required().email(),
