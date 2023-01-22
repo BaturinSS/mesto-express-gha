@@ -11,7 +11,7 @@ const {
 //* Импорт классового элемента ошибки
 const ValidationError = require('../errors/ValidationError');
 
-//* Импорт классового элемента ошибки
+//* Импорт классового элемента  ошибки
 const AccessError = require('../errors/AccessError');
 
 //* Импорт классового элемента ошибки
